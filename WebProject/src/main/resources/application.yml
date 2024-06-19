@@ -1,0 +1,34 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/webproject
+    username: root
+    password: root
+  application:
+    name: demo
+  mvc:
+    static-path-pattern: /static/**
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+  mybatis:
+    mapper-locations: classpath:mappers/*.xml  # MyBatis XML 매퍼 파일의 위치 지정
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+server:
+  port: 2245
+    
+
+

@@ -1,0 +1,28 @@
+create table board(
+	B_no int primary key auto_increment,
+    B_title char(50) not null default "",
+    B_content char(100) not null,
+    B_hit int not null,
+    B_like int not null,
+    B_datetime datetime not null default now(),
+    M_nickname char(50) not null,	
+    R_no int not null,
+    foreign key (M_nickname) references member(M_nickname),
+    foreign key (R_no) references reply(R_no)
+);
+alter table board add B_updatetime datetime not null default now();
+create table member(
+		M_no int primary key auto_increment,
+        M_id char(30) unique not null,
+        M_pw char(50) not null,
+        M_nickname char(50) unique not null,
+        M_number char(20) not null,
+        M_email char(30) not null
+);
+create table reply(
+	R_no int primary key auto_increment,
+    R_content char(50) not null,
+    R_datetime datetime not null default now(),
+    M_nickname char(50),
+    foreign key (M_nickname) references member(M_nickname)
+);
