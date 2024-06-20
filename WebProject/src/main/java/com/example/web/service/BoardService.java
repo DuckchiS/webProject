@@ -10,6 +10,6 @@ public interface BoardService {
 	public Model getSearchList(Model m, int currentPage, String word);
 	public BoardDto read(long no);
 	public void del(long no);
-	public String write(BoardDto dto);
+	public void write(BoardDto dto);
 	public void modify(BoardDto dto);
 }

@@ -100,8 +100,8 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Transactional
 	@Override
-	public String write(BoardDto dto) {
-		return mapper.write(dto);
+	public void write(BoardDto dto) {
+		mapper.write(dto);
 	}
 	
 	@Override

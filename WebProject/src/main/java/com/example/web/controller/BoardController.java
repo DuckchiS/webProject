@@ -2,23 +2,30 @@ package com.example.web.controller;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.web.dto.BoardDto;
+import com.example.web.dto.ReplyDto;
 import com.example.web.model.CustomUserDetails;
 import com.example.web.service.BoardService;
+import com.example.web.service.ReplyService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -30,6 +37,8 @@ import lombok.extern.log4j.Log4j2;
 @AllArgsConstructor
 public class BoardController {
 	private BoardService service;
+	
+	private ReplyService replyService;
 	
 	@GetMapping("/list")
 	public String list(@RequestParam(value="currentPage", defaultValue = "1") int currentPage, Model model) {
@@ -64,14 +73,26 @@ public class BoardController {
         // 게시글 작성 서비스 호출
         service.write(dto);
 
-
-     // 리스트로 리다이렉트
+        // 리스트로 리다이렉트
         return new RedirectView("/board/list");
     }
 	
 	@GetMapping({"/read", "/modify"})
-	public void read(@RequestParam("b_no") long b_no, Model model) {
-		model.addAttribute("read",service.read(b_no));
+	public void read(@RequestParam("b_no") long b_no, Model model, Principal principal) {
+		BoardDto board = service.read(b_no); 
+		List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no);
+		
+	    // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
+        String username = principal.getName();
+        
+        // 사용자 정보를 SecurityContext에서 가져옴
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String nickname = userDetails.getNickname();
+        
+        model.addAttribute("currentUsername",nickname);
+        
+		model.addAttribute("read",board);
+		model.addAttribute("replies",replies);
 	}
 	
 	@PostMapping("/modify")
@@ -86,9 +107,25 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	@GetMapping("/reply")
-	public void reply() {
-		
+	@PostMapping("/reply")
+	public RedirectView replyProcess(@RequestParam("r_content") String content, @RequestParam("b_no") int boardId, Principal principal) {
+	    // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
+        String username = principal.getName();
+        
+        // 사용자 정보를 SecurityContext에서 가져옴
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String nickname = userDetails.getNickname();
+
+        // 댓글 DTO에 값 설정
+        ReplyDto replyDto = new ReplyDto();
+        replyDto.setR_content(content);
+        replyDto.setM_nickname(nickname);
+        replyDto.setB_no(boardId);
+        
+        replyService.createReply(replyDto);
+
+        // 게시글 상세 페이지로 리다이렉트
+        return new RedirectView("/board/read?b_no=" + boardId);
 	}
 	
 	@GetMapping("/latter")

@@ -23,12 +23,20 @@
 		select * from board where b_no = #{b_no}
 	</select>
 	
+	<select id="getReplys" resultType="com.example.web.dto.ReplyDto">
+		select * from reply where b_no = #{b_no}
+	</select>
+	
 	<delete id="del">
 		delete from board where b_no = #{b_no}
 	</delete>
 	
 	<insert id="write">
 		insert into board (b_title,b_content,m_nickname) values (#{b_title},#{b_content},#{m_nickname}) 
+	</insert>
+	
+	<insert id="reply">
+		insert into reply (r_content,m_nickname,b_no) value(#{r_content},#{m_nickname},#{b_no})
 	</insert>
 	
 	<update id="modify">

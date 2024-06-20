@@ -34,6 +34,7 @@ public class ReplyEntity {
     @JoinColumn(name = "M_nickname", referencedColumnName = "M_nickname")
     private UserEntity member;
 
-    @OneToMany(mappedBy = "reply")
-    private List<BoardEntity> boards;
+    @ManyToOne
+    @JoinColumn(name = "B_no", referencedColumnName = "B_no")
+    private BoardEntity board;
 }

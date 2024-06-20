@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +12,13 @@
     게시판
     <hr>
     <a href="/">홈페이지</a>
-    <a href="/board/write">새글 쓰기</a>
+    <sec:authorize access="isAuthenticated()">
+        <a href="/board/write">새글 쓰기</a>
+		<a href="/member/logout">로그아웃 하기</a>
+    </sec:authorize>
+    <sec:authorize access="!isAuthenticated()">
+        <a href="/member/login">로그인</a>
+    </sec:authorize>
     <hr>
     <table>
         <tr>

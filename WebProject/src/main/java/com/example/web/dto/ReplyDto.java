@@ -10,4 +10,5 @@ public class ReplyDto {
 	private String r_content;
 	private Date r_datetime;
 	private String m_nickname;
+	private long b_no;
 }

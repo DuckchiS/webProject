@@ -14,6 +14,6 @@ public interface BoardMapper {
 	public ArrayList<BoardDto> getSearchList(int limitIndex, String word);
 	public BoardDto read(long no);
 	public void del(long no);
-	public String write(BoardDto dto);
+	public void write(BoardDto dto);
 	public void modify(BoardDto dto);
 }
