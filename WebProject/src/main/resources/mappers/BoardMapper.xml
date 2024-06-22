@@ -31,6 +31,10 @@
 		delete from board where b_no = #{b_no}
 	</delete>
 	
+	<delete id="replyDel">
+		delete from reply where b_no = #{b_no}
+	</delete>
+	
 	<insert id="write">
 		insert into board (b_title,b_content,m_nickname) values (#{b_title},#{b_content},#{m_nickname}) 
 	</insert>

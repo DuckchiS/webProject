@@ -1,0 +1,259 @@
+/* 기존 CSS 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f5f5f5; /* 기존 스타일과 충돌을 방지하기 위해 여기서 설정 */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1000px; /* 기존 스타일에서 변경되었습니다. */
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    text-align: center; /* 추가: 컨테이너 내부의 모든 텍스트를 가운데 정렬 */
+}
+
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+}
+
+nav {
+    background-color: #444; /* 기존 스타일에서 변경되었습니다. */
+    padding: 0.5em;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 1em;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    color: white;
+    background-color: #555;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: #666;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* 회원가입 폼 스타일 */
+.signup-container {
+    width: 40%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.signup-container h2 {
+    margin-bottom: 1em;
+}
+
+.signup-container table {
+    width: 100%;
+    text-align: center;
+}
+
+.signup-container table tr td {
+    padding: 0.5em;
+    text-align: center;
+}
+
+.signup-container table tr td input[type="text"],
+.signup-container table tr td input[type="password"] {
+    width: 100%;
+    padding: 0.5em;
+}
+
+.signup-container table tr td input[type="submit"] {
+    padding: 0.5em 1em;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.signup-container table tr td input[type="submit"]:hover {
+    background-color: #555;
+}
+
+/* 로그인 폼 스타일 */
+.login-container {
+    width: 40%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 1em;
+}
+
+.login-container table {
+    width: 100%;
+    text-align: center;
+}
+
+.login-container table tr td {
+    padding: 0.5em;
+    text-align: center;
+}
+
+.login-container table tr td input[type="text"],
+.login-container table tr td input[type="password"] {
+    width: 100%;
+    padding: 0.5em;
+}
+
+.login-container table tr td input[type="submit"] {
+    padding: 0.5em 1em;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-container table tr td input[type="submit"]:hover {
+    background-color: #555;
+}
+
+/* 로그인 메시지 스타일 */
+.welcome-message {
+    color: white; /* 새로 추가된 스타일 */
+    margin-bottom: 10px;
+}
+
+/* 버튼 스타일 */
+.nav-buttons a {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+.nav-buttons a:hover {
+    background-color: #555;
+}
+
+/* 새로 추가된 스타일 */
+.form-container {
+    width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.form-container form {
+    margin-top: 1em;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.form-container textarea {
+    width: 100%;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    resize: vertical;
+}
+
+.form-container input[type="submit"] {
+    padding: 0.5em 1em;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-container input[type="submit"]:hover {
+    background-color: #555;
+}
+
+/* board-content-section 스타일 추가 */
+.board-content-section {
+    border: 1px solid #ddd;
+    padding: 1em;
+    border-radius: 5px;
+    margin-bottom: 2em;
+    text-align: center; /* 추가: 컨텐츠 섹션 내부의 모든 텍스트를 가운데 정렬 */
+}
+
+.board-content-section h3,
+.board-content-section p,
+.board-content-section form {
+    margin: 0 auto;
+    max-width: 80%;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    text-align: center; /* 테이블 내의 텍스트를 가운데 정렬 */
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+}
+
+thead {
+    background-color: #f2f2f2;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    margin: 20px 0;
+    text-align: center; /* 페이지네이션을 가운데 정렬 */
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #f2f2f2;
+}

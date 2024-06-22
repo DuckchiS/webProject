@@ -7,52 +7,69 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판</title>
+<link rel="stylesheet" href="/static/css/blog.css">
 </head>
 <body>
-    게시판
-    <hr>
-    <a href="/">홈페이지</a>
-    <sec:authorize access="isAuthenticated()">
-        <a href="/board/write">새글 쓰기</a>
-		<a href="/member/logout">로그아웃 하기</a>
-    </sec:authorize>
-    <sec:authorize access="!isAuthenticated()">
-        <a href="/member/login">로그인</a>
-    </sec:authorize>
+<div class="header">
+    DuckchiS의 커뮤니티 게시판
+</div>
+<nav>
+    <div class="nav-buttons">
+        <a href="/">홈</a>
+        <sec:authorize access="isAuthenticated()">
+            <a href="/board/write">새글 쓰기</a>
+            <a href="/member/logout">로그아웃 하기</a>
+        </sec:authorize>
+        <sec:authorize access="!isAuthenticated()">
+            <a href="/member/login">로그인</a>
+        </sec:authorize>
+    </div>
+</nav>
+<div class="container">
+    <h2>게시판</h2>
     <hr>
     <table>
-        <tr>
-            <td>글번호</td>
-            <td>아이디</td>
-            <td>글제목</td>
-            <td>조회수</td>
-            <td>작성시간</td>
-        </tr>
-    <!-- jstl 로 처리하면 더 짧게 가능 -->
-    <c:forEach var="board" items="${list}">
-        <tr>
-            <td>${board.b_no}</td>
-            <td>${board.m_nickname}</td>
-            <td><a href="/board/read?b_no=${board.b_no}">${board.b_title}</a></td>
-            <td>${board.b_hit}</td>
-            <td>${board.b_datetime}</td>
-        </tr>
-    </c:forEach>
+        <thead>
+            <tr>
+                <th>글번호</th>
+                <th>아이디</th>
+                <th>글제목</th>
+                <th>조회수</th>
+                <th>작성시간</th>
+            </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="board" items="${list}">
+            <tr>
+                <td>${board.b_no}</td>
+                <td>${board.m_nickname}</td>
+                <td><a href="/board/read?b_no=${board.b_no}">${board.b_title}</a></td>
+                <td>${board.b_hit}</td>
+                <td>${board.b_datetime}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
     </table>
     <hr>
-    <!-- 이전 블럭 링크 -->
-    <c:if test="${hasBlockPrev}">
-        <a href="/board/list?currentPage=${prevPage}">이전</a>
-    </c:if>
-    
-    <!-- 페이지 링크 -->
-    <c:forEach var="i" begin="${blockStartPage}" end="${blockEndPage}">
-        [<a href="/board/list?currentPage=${i}">${i}</a>] 
-    </c:forEach>
-    
-    <!-- 다음 블럭 링크 -->
-    <c:if test="${hasBlockNext}">
-        <a href="/board/list?currentPage=${nextPage}">다음</a>
-    </c:if>
+    <div class="pagination">
+        <!-- 이전 블럭 링크 -->
+        <c:if test="${hasBlockPrev}">
+            <a href="/board/list?currentPage=${prevPage}">이전</a>
+        </c:if>
+        
+        <!-- 페이지 링크 -->
+        <c:forEach var="i" begin="${blockStartPage}" end="${blockEndPage}">
+            [<a href="/board/list?currentPage=${i}">${i}</a>] 
+        </c:forEach>
+        
+        <!-- 다음 블럭 링크 -->
+        <c:if test="${hasBlockNext}">
+            <a href="/board/list?currentPage=${nextPage}">다음</a>
+        </c:if>
+    </div>
+</div>
+<footer class="footer">
+    &copy; 2024 DuckchiS. All rights reserved.
+</footer>
 </body>
 </html>

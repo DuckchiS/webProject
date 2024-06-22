@@ -95,6 +95,7 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public void del(long no) {
+		mapper.replyDel(no);
 		mapper.del(no);
 	}
 	

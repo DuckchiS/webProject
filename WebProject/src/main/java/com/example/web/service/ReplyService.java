@@ -3,6 +3,7 @@ package com.example.web.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.example.web.dto.ReplyDto;
@@ -13,6 +14,7 @@ public class ReplyService {
 	@Autowired
 	private ReplyMapper replyMapper;
 	
+	@PreAuthorize("isAuthenticated()")
 	public void createReply(ReplyDto reply) {
 		replyMapper.insertReply(reply);
 	}

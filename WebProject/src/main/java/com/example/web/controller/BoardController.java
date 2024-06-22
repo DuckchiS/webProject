@@ -79,20 +79,22 @@ public class BoardController {
 	
 	@GetMapping({"/read", "/modify"})
 	public void read(@RequestParam("b_no") long b_no, Model model, Principal principal) {
-		BoardDto board = service.read(b_no); 
-		List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no);
-		
+	    BoardDto board = service.read(b_no); 
+	    List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no);
+	    
 	    // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
-        String username = principal.getName();
-        
-        // 사용자 정보를 SecurityContext에서 가져옴
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String nickname = userDetails.getNickname();
-        
-        model.addAttribute("currentUsername",nickname);
-        
-		model.addAttribute("read",board);
-		model.addAttribute("replies",replies);
+	    if (principal != null) {
+	        String username = principal.getName();
+	        // 사용자 정보를 SecurityContext에서 가져옴
+	        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	        String nickname = userDetails.getNickname();
+	        model.addAttribute("currentUsername", nickname);
+	    } else {
+	        model.addAttribute("currentUsername", "Guest"); // 로그인하지 않은 경우, 게스트 사용자로 처리
+	    }
+	    
+	    model.addAttribute("read", board);
+	    model.addAttribute("replies", replies);
 	}
 	
 	@PostMapping("/modify")
