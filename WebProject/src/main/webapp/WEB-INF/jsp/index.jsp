@@ -31,12 +31,23 @@
 </nav>
 <div class="container">
     <h2>커뮤니티 광장</h2>
+	<hr>
+    <a href="/board/list?category=notice">공지 게시판 가기</a>
     <hr>
-    <a href="/board/list">게시판 가기</a>
+    <a href="/board/list?category=free">자유 게시판 가기</a>
+	<hr>
+    <a href="/board/list?category=lol">롤 게시판 가기</a>
+	<hr>
+    <a href="/board/list?category=kbo">국내야구 게시판 가기</a>
+	<hr>
+    <a href="/board/list?category=mlb">해외야구 게시판 가기</a>
+	<hr>
+    <a href="/board/list?category=soccer">해외축구 게시판 가기</a>
+	<hr>
+    <a href="/board/list?category=hobby">취미 게시판 가기</a>
 </div>
 <footer class="footer">
     &copy; 2024 DuckchiS. All rights reserved.
 </footer>
 </body>
-</html>
 </html>

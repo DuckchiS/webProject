@@ -3,20 +3,20 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.web.mapper.BoardMapper">
-	<select id="getCount" resultType="int">
-		select count(*) from board
+	<select id="getCount" resultType="int" parameterType="map">
+		select count(*) from board where b_category = #{category}
 	</select>
 	
-	<select id="getSearchCount" resultType="int">
-	    select count(*) from board where b_title like concat('%',#{word},'%')
+	<select id="getSearchCount" resultType="int" parameterType="map">
+	    select count(*) from board where b_category = #{category} and b_title like concat('%',#{word},'%')
 	</select>
 	
-	<select id="getList" resultType="com.example.web.dto.BoardDto">
-		select * from board limit #{limitIndex},5
+	<select id="getList" resultType="com.example.web.dto.BoardDto" parameterType="map">
+		select * from board where b_category = #{category} limit #{limitIndex},5
 	</select>
 	
 	<select id="getSearchList" resultType="com.example.web.dto.BoardDto" parameterType="map">
-    	select * from board where b_title like concat('%',#{word},'%') limit #{limitIndex}, 5
+    	select * from board where b_category = #{category} and b_title like concat('%',#{word},'%') limit #{limitIndex}, 5
 	</select>
 	
 	<select id="read" resultType="com.example.web.dto.BoardDto">
@@ -36,7 +36,7 @@
 	</delete>
 	
 	<insert id="write">
-		insert into board (b_title,b_content,m_nickname) values (#{b_title},#{b_content},#{m_nickname}) 
+		insert into board (b_title,b_content,m_nickname,b_category) values (#{b_title},#{b_content},#{m_nickname},#{b_category}) 
 	</insert>
 	
 	<insert id="reply">
@@ -44,7 +44,7 @@
 	</insert>
 	
 	<update id="modify">
-		update board set b_content = #{b_content}, b_updatetime = now() where b_no = #{b_no}
+		update board set b_content = #{b_content}, b_updatetime = now(), b_category = #{b_category} where b_no = #{b_no}
 	</update>
 	
 	<update id="hit">

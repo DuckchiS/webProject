@@ -40,6 +40,9 @@ public class BoardEntity {
     
     @Column(name = "B_updatetime", nullable = false)
     private LocalDateTime bUpdatetime;
+    
+    @Column(name = "B_category", nullable = false)
+    private String bCategory;
 
     @ManyToOne
     @JoinColumn(name = "M_nickname", referencedColumnName = "M_nickname", nullable = false)

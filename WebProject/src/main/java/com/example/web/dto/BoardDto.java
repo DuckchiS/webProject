@@ -16,5 +16,6 @@ public class BoardDto {
 	private Date b_datetime;
 	private Date b_updatetime;
 	private String m_nickname;
+	private String b_category;
 	private long r_no;
 }

@@ -17,10 +17,11 @@
 	    <a href="/">홈</a>
 	    <a href="/board/list">글 리스트</a>
 	    <sec:authorize access="isAuthenticated()">
-	        <a href="/board/write">새글 쓰기</a>
+	        <a href="/board/write?category=${category}">새글 쓰기</a>
 	        <a href="/member/logout">로그아웃 하기</a>
 	    </sec:authorize>
 	    <sec:authorize access="!isAuthenticated()">
+	    	<a href="/board/write?category=${category}">새글 쓰기</a>
 	        <a href="/member/login">로그인</a>
 	    </sec:authorize>
     </div>
@@ -41,8 +42,8 @@
         </div>
         <div class="board-actions">
             <c:if test="${read.m_nickname == currentUsername}">
-                <a href="/board/del?b_no=${read.b_no}">글 삭제</a>
-                <a href="/board/modify?b_no=${read.b_no}">글 수정</a>
+                <a href="/board/del?b_no=${read.b_no}&category=${category}">글 삭제</a>
+                <a href="/board/modify?b_no=${read.b_no}&category=${category}">글 수정</a>
             </c:if>
         </div>
     </div>

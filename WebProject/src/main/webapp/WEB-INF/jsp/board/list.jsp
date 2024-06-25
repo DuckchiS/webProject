@@ -17,10 +17,11 @@
     <div class="nav-buttons">
         <a href="/">홈</a>
         <sec:authorize access="isAuthenticated()">
-            <a href="/board/write">새글 쓰기</a>
+            <a href="/board/write?category=${param.category}">쓰기</a>
             <a href="/member/logout">로그아웃 하기</a>
         </sec:authorize>
         <sec:authorize access="!isAuthenticated()">
+        	<a href="/board/write?category=${param.category}">쓰기</a>
             <a href="/member/login">로그인</a>
         </sec:authorize>
     </div>
@@ -43,7 +44,7 @@
             <tr>
                 <td>${board.b_no}</td>
                 <td>${board.m_nickname}</td>
-                <td><a href="/board/read?b_no=${board.b_no}">${board.b_title}</a></td>
+                <td><a href="/board/read?b_no=${board.b_no}&category=${param.category}">${board.b_title}</a></td>
                 <td>${board.b_hit}</td>
                 <td>${board.b_datetime}</td>
             </tr>

@@ -14,13 +14,15 @@
 <nav>
 	<div class="nav-buttons">
     	<a href="/">홈</a>
-    	<a href="/board/list">게시글</a>
+    	<a href="/board/list?category=${param.category}">게시글</a>
     </div>
 </nav>
 <div class="container">
     <div class="form-container">
         <h2>게시글 쓰기</h2>
         <form action="/board/write" method="post">
+        	<!-- 숨겨진 필드로 카테고리 설정 -->
+            <input type="hidden" name="b_category" value="${param.category}">
             <label for="b_title">제목:</label>
             <textarea id="b_title" name="b_title" rows="1" required></textarea><br>
             <label for="b_content">내용:</label>

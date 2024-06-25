@@ -19,10 +19,11 @@
         <a href="/">홈</a>
         <a href="/board/list">글 리스트</a>
         <sec:authorize access="isAuthenticated()">
-            <a href="/board/write">새글 쓰기</a>
+            <a href="/board/write?category=${param.category}">새글 쓰기</a>
             <a href="/member/logout">로그아웃 하기</a>
         </sec:authorize>
         <sec:authorize access="!isAuthenticated()">
+        	<a href="/board/write?category=${param.category}">새글 쓰기</a>
             <a href="/member/login">로그인</a>
         </sec:authorize>
     </div>
@@ -34,7 +35,9 @@
         <div class="board-details">
             <p>글번호: ${read.b_no}</p>
         </div>
-        <form action="/board/modify" method="post" class="modify-form">
+        <form action="/board/modify?category=${param.category}" method="post" class="modify-form">
+            <!-- 숨겨진 필드로 카테고리 설정 -->
+            <input type="hidden" name="b_category" value="${param.category}">
             <input type="hidden" name="b_no" value="${read.b_no}">
             <div class="form-group">
                 <label for="b_content">글내용:</label>

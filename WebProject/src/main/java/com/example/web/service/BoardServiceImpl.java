@@ -20,16 +20,16 @@ public class BoardServiceImpl implements BoardService{
 	private BoardMapper mapper;
 	
 	@Override
-	public Model getList(Model m, int currentPage) {
-		return getListorSearch(m, currentPage, null);
+	public Model getList(Model m, int currentPage, String category) {
+		return getListorSearch(m, currentPage, null, category);
 	}
 	
 	@Override
-	public Model getSearchList(Model m, int currentPage, String word) {
-		return getListorSearch(m, currentPage, word);
+	public Model getSearchList(Model m, int currentPage, String word, String category) {
+		return getListorSearch(m, currentPage, word, category);
 	}
 	
-	private Model getListorSearch(Model m, int currentPage, String word) {
+	private Model getListorSearch(Model m, int currentPage, String word, String category) {
 	    int listCountPerPage = 5;    // 페이지당 보여줄 글 수
 	    int pagesPerBlock = 3;       // 블럭 당 페이지 수
 	    int currentBlock = 1;        // 현재 페이지 블럭
@@ -44,11 +44,11 @@ public class BoardServiceImpl implements BoardService{
 	    int count;
 	    
 	    if (word == null || word.isEmpty()) {
-	        list = mapper.getList(limitIndex);
-	        count = mapper.getCount();
+	        list = mapper.getList(limitIndex, category);
+	        count = mapper.getCount(category);
 	    } else {
-	        list = mapper.getSearchList(limitIndex, word);
-	        count = mapper.getSearchCount(word);
+	        list = mapper.getSearchList(limitIndex, word, category);
+	        count = mapper.getSearchCount(word, category);
 	    }
 	    
 	    m.addAttribute("list", list);

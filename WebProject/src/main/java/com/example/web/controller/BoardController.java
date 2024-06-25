@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -41,15 +42,17 @@ public class BoardController {
 	private ReplyService replyService;
 	
 	@GetMapping("/list")
-	public String list(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
-	                   @RequestParam(value = "keyword", required = false) String keyword, Model model) {
-		if (keyword != null && !keyword.isEmpty()) {
-	        model = service.getSearchList(model, currentPage, keyword);
-	    } else {
-	        model = service.getList(model, currentPage);
-	    }
-	    return "board/list";
-	}
+    public String list(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+                       @RequestParam(value = "keyword", required = false) String keyword,
+                       @RequestParam(value = "category", defaultValue = "free") String category,
+                       Model model) {
+        if (keyword != null && !keyword.isEmpty()) {
+            model = service.getSearchList(model, currentPage, keyword, category);
+        } else {
+            model = service.getList(model, currentPage, category);
+        }
+        return "board/list";
+    }
 	
 	@GetMapping("/write")
 	public String write(Principal principal) {
@@ -61,7 +64,7 @@ public class BoardController {
 	}
 	
 	@PostMapping(value = "/write", consumes = "application/x-www-form-urlencoded")
-    public RedirectView write(@RequestParam("b_title") String title, @RequestParam("b_content") String content, Principal principal) {
+    public RedirectView write(@RequestParam("b_title") String title, @RequestParam("b_content") String content, @RequestParam("b_category") String category, Principal principal) {
         // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
         String username = principal.getName();
         
@@ -74,16 +77,17 @@ public class BoardController {
         dto.setB_title(title);
         dto.setB_content(content);
         dto.setM_nickname(nickname);
+        dto.setB_category(category);
 
         // 게시글 작성 서비스 호출
         service.write(dto);
 
         // 리스트로 리다이렉트
-        return new RedirectView("/board/list");
+        return new RedirectView("/board/list?category="+category);
     }
 	
 	@GetMapping({"/read", "/modify"})
-	public void read(@RequestParam("b_no") long b_no, Model model, Principal principal) {
+	public void read(@RequestParam("b_no") long b_no, @RequestParam(value = "category", required = false) String category, Model model, Principal principal) {
 	    BoardDto board = service.read(b_no); 
 	    List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no);
 	    
@@ -100,18 +104,26 @@ public class BoardController {
 	    
 	    model.addAttribute("read", board);
 	    model.addAttribute("replies", replies);
+	    model.addAttribute("category", category);
 	}
 	
 	@PostMapping("/modify")
-	public String modifyProcess(BoardDto dto) {
-		service.modify(dto);
-		return "redirect:/board/list";
+	public String modifyProcess(BoardDto dto, @RequestParam(value = "category", required = false) String category) {
+	    service.modify(dto);
+	    if (category != null) {
+	        return "redirect:/board/list?category=" + category;
+	    } else {
+	        return "redirect:/board/list";
+	    }
 	}
-	
 	@GetMapping("/del")
-	public String del(@RequestParam("b_no") long bno) {
-		service.del(bno);
-		return "redirect:/board/list";
+	public String del(@RequestParam("b_no") long bno, @RequestParam(value = "category", required = false) String category) {
+	    service.del(bno);
+	    if (category != null) {
+	        return "redirect:/board/list?category=" + category;
+	    } else {
+	        return "redirect:/board/list";
+	    }
 	}
 	
 	@PostMapping("/reply")
