@@ -8,15 +8,15 @@
 	</select>
 	
 	<select id="getSearchCount" resultType="int">
-		select count(*) from board where b_title like concat('%s',#{word},'%')
+	    select count(*) from board where b_title like concat('%',#{word},'%')
 	</select>
 	
 	<select id="getList" resultType="com.example.web.dto.BoardDto">
 		select * from board limit #{limitIndex},5
 	</select>
 	
-	<select id="getSearchList" resultType="com.example.web.dto.BoardDto">
-		select * from board where b_title like concat('%s',#{word},'%') limit #{limitIndex},5
+	<select id="getSearchList" resultType="com.example.web.dto.BoardDto" parameterType="map">
+    	select * from board where b_title like concat('%',#{word},'%') limit #{limitIndex}, 5
 	</select>
 	
 	<select id="read" resultType="com.example.web.dto.BoardDto">

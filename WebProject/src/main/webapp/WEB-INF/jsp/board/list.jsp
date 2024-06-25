@@ -51,6 +51,12 @@
         </tbody>
     </table>
     <hr>
+    <!-- 검색 폼 추가 -->
+    <form action="/board/list" method="get" class="search-form">
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요">
+        <button type="submit">검색</button>
+    </form>
+    <hr>
     <div class="pagination">
         <!-- 이전 블럭 링크 -->
         <c:if test="${hasBlockPrev}">

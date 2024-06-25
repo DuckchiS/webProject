@@ -41,9 +41,14 @@ public class BoardController {
 	private ReplyService replyService;
 	
 	@GetMapping("/list")
-	public String list(@RequestParam(value="currentPage", defaultValue = "1") int currentPage, Model model) {
-		model = service.getList(model, currentPage);
-		return "board/list";
+	public String list(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+	                   @RequestParam(value = "keyword", required = false) String keyword, Model model) {
+		if (keyword != null && !keyword.isEmpty()) {
+	        model = service.getSearchList(model, currentPage, keyword);
+	    } else {
+	        model = service.getList(model, currentPage);
+	    }
+	    return "board/list";
 	}
 	
 	@GetMapping("/write")
