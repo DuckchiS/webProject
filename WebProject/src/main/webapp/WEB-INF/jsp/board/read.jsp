@@ -40,8 +40,10 @@
             <p>${read.b_content}</p>
         </div>
         <div class="board-actions">
-            <a href="/board/del?b_no=${read.b_no}">글 삭제</a>
-            <a href="/board/modify?b_no=${read.b_no}">글 수정</a>
+            <c:if test="${read.m_nickname == currentUsername}">
+                <a href="/board/del?b_no=${read.b_no}">글 삭제</a>
+                <a href="/board/modify?b_no=${read.b_no}">글 수정</a>
+            </c:if>
         </div>
     </div>
 	<sec:authorize access="isAuthenticated()">
