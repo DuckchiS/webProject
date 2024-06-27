@@ -2,13 +2,16 @@ package com.example.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.web.dto.UserDto;
 import com.example.web.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
@@ -28,8 +31,16 @@ public class UserController {
 	}
 	
 	@PostMapping("/loginProc")
-	public String loginProcess() {
-		return "redirect:/";
+	public String loginProcess(@RequestParam String username, @RequestParam String password, Model model, HttpSession session) {
+	    if (username.equals("사용자 입력 아이디") && password.equals("사용자 입력 비밀번호")) {
+	        // 로그인 성공
+	        session.setAttribute("username", username);
+	        return "redirect:/board/list"; 
+	    } else {
+	        // 로그인 실패
+	        model.addAttribute("error", "아이디나 비밀번호가 잘못되었습니다.");
+	        return "member/login"; 
+	    }
 	}
 	
 	@GetMapping("/signup")
