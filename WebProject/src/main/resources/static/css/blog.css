@@ -2,20 +2,20 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    background-color: #f5f5f5; /* 기존 스타일과 충돌을 방지하기 위해 여기서 설정 */
+    background-color: #f5f5f5;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    max-width: 1000px; /* 기존 스타일에서 변경되었습니다. */
+    max-width: 1000px;
     width: 80%;
     margin: 0 auto;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border-radius: 10px;
-    text-align: center; /* 추가: 컨테이너 내부의 모든 텍스트를 가운데 정렬 */
+    text-align: center;
 }
 
 .header {
@@ -26,7 +26,7 @@ body {
 }
 
 nav {
-    background-color: #444; /* 기존 스타일에서 변경되었습니다. */
+    background-color: #444;
     padding: 0.5em;
     text-align: center;
 }
@@ -142,7 +142,7 @@ nav a:hover {
 
 /* 로그인 메시지 스타일 */
 .welcome-message {
-    color: white; /* 새로 추가된 스타일 */
+    color: white;
     margin-bottom: 10px;
 }
 
@@ -209,7 +209,7 @@ nav a:hover {
     padding: 1em;
     border-radius: 5px;
     margin-bottom: 2em;
-    text-align: center; /* 추가: 컨텐츠 섹션 내부의 모든 텍스트를 가운데 정렬 */
+    text-align: center;
 }
 
 .board-content-section h3,
@@ -224,7 +224,7 @@ table {
     width: 80%;
     margin: 20px auto;
     border-collapse: collapse;
-    text-align: center; /* 테이블 내의 텍스트를 가운데 정렬 */
+    text-align: center;
 }
 
 table, th, td {
@@ -242,7 +242,7 @@ thead {
 /* 페이지네이션 스타일 */
 .pagination {
     margin: 20px 0;
-    text-align: center; /* 페이지네이션을 가운데 정렬 */
+    text-align: center;
 }
 
 .pagination a {
@@ -258,22 +258,52 @@ thead {
     background-color: #f2f2f2;
 }
 
+/* 댓글 스타일 */
 .reply-item {
-	margin-bottom: 15px;
-	padding: 10px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	background-color: #f9f9f9;
+    display: flex; /* Flexbox 사용 */
+    justify-content: space-around; /* 요소들 간의 간격을 균등하게 배치 */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
 .reply-item p {
-	margin: 5px 0;
+    font-size: 16px; /* 텍스트 크기 설정 */
+    margin: 5px; /* 각 항목 간의 간격 설정 */
+    color: #555; /* 텍스트 색상 설정 */
+}
+
+.reply-item p span {
+    font-weight: bold; /* 글제목을 강조 */
 }
 
 .reply-list {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 .reply-section, .reply-list-section {
-	margin-top: 30px;
+    margin-top: 30px;
+}
+
+/* 글 읽기 상세 정보 스타일 */
+.board-details {
+    display: flex; /* Flexbox 사용 */
+    justify-content: space-around; /* 요소들 간의 간격을 균등하게 배치 */
+    margin-bottom: 20px; /* 글 읽기 상세 정보와 나머지 콘텐츠 간의 간격 설정 */
+    padding: 10px;
+    border: 1px solid #ddd; /* 테두리 설정 */
+    border-radius: 5px; /* 테두리 둥글게 설정 */
+    background-color: #f9f9f9; /* 배경 색상 설정 */
+}
+
+.board-details p {
+    font-size: 16px; /* 텍스트 크기 설정 */
+    margin: 5px; /* 각 항목 간의 간격 설정 */
+    color: #555; /* 텍스트 색상 설정 */
+}
+
+.board-details p span {
+    font-weight: bold; /* 글제목을 강조 */
 }

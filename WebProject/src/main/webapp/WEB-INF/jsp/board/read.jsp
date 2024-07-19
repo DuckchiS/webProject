@@ -15,7 +15,7 @@
 <nav>
 	<div class="nav-buttons">
 	    <a href="/">홈</a>
-	    <a href="/board/list">글 리스트</a>
+	    <a href="/board/list?category=${category}">글 리스트</a>
 	    <sec:authorize access="isAuthenticated()">
 	        <a href="/board/write?category=${category}">새글 쓰기</a>
 	        <a href="/member/logout">로그아웃 하기</a>
@@ -30,13 +30,13 @@
     <h2>글 읽기</h2>
     <div class="board-content-section">
         <h3>글제목: ${read.b_title}</h3>
-        <div class="board-details">
-            <p>글번호: ${read.b_no}</p>
-            <p>아이디: ${read.m_nickname}</p>
-            <p>조회수: ${read.b_hit}</p>
-            <p>작성시간: ${read.b_datetime}</p>
-            <p>수정시간: ${read.b_updatetime}</p>
-        </div>
+		<div class="board-details">
+			<p><span>글번호:</span> ${read.b_no}</p>
+			<p><span>작성자:</span> ${read.m_nickname}</p>
+			<p><span>조회수:</span> ${read.b_hit}</p>
+			<p><span>작성시간:</span> ${read.b_datetime}</p>
+			<p><span>수정시간:</span> ${read.b_updatetime}</p>
+		</div>
         <div class="board-content">
             <p>${read.b_content}</p>
         </div>
@@ -71,10 +71,9 @@
         <div class="reply-list">
             <c:forEach var="reply" items="${replies}">
                 <div class="reply-item">
-                    <p>작성자: ${reply.m_nickname}</p>
-                    <p>내용: ${reply.r_content}</p>
-                    <p>작성시간: ${reply.r_datetime}</p>
-                    <hr>
+                    <p><span>작성자:</span> ${reply.m_nickname}</p>
+                    <p> ${reply.r_content}</p>
+                    <p><span>작성시간:</span> ${reply.r_datetime}</p>
                 </div>
             </c:forEach>
         </div>
