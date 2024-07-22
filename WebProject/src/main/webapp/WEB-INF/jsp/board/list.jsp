@@ -61,17 +61,17 @@
     <div class="pagination">
         <!-- 이전 블럭 링크 -->
         <c:if test="${hasBlockPrev}">
-            <a href="/board/list?currentPage=${prevPage}">이전</a>
+            <a href="/board/list?currentPage=${prevPage}&category=${param.category}">이전</a>
         </c:if>
         
         <!-- 페이지 링크 -->
         <c:forEach var="i" begin="${blockStartPage}" end="${blockEndPage}">
-            [<a href="/board/list?currentPage=${i}">${i}</a>] 
+            [<a href="/board/list?currentPage=${i}&category=${param.category}">${i}</a>] 
         </c:forEach>
         
         <!-- 다음 블럭 링크 -->
         <c:if test="${hasBlockNext}">
-            <a href="/board/list?currentPage=${nextPage}">다음</a>
+            <a href="/board/list?currentPage=${nextPage}&category=${param.category}">다음</a>
         </c:if>
     </div>
 </div>
