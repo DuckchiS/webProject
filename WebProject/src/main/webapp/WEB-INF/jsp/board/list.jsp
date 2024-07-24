@@ -53,7 +53,7 @@
     </table>
     <hr>
     <!-- 검색 폼 추가 -->
-    <form action="/board/list" method="get" class="search-form">
+    <form action="/board/list?category=${param.category}" method="get" class="search-form">
         <input type="text" name="keyword" placeholder="검색어를 입력하세요">
         <button type="submit">검색</button>
     </form>
