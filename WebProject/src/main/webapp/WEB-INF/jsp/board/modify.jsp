@@ -41,7 +41,7 @@
             <input type="hidden" name="b_no" value="${read.b_no}">
             <div class="form-group">
                 <label for="b_content">글내용:</label>
-                <textarea name="b_content" id="b_content" rows="10" cols="50">${read.b_content}</textarea>
+                <textarea name="b_content" id="b_content" rows="10" cols="50" style="width: 100%; height: 200px; resize: none;">${read.b_content}</textarea>
             </div>
             <div class="form-group">
                 <input type="submit" value="수정하기">

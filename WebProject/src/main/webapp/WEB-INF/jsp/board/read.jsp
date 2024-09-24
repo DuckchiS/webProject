@@ -27,9 +27,8 @@
     </div>
 </nav>
 <div class="container">
-    <h2>글 읽기</h2>
+    <h2>글제목: ${read.b_title}</h2>
     <div class="board-content-section">
-        <h3>글제목: ${read.b_title}</h3>
 		<div class="board-details">
 			<p><span>글번호:</span> ${read.b_no}</p>
 			<p><span>작성자:</span> ${read.m_nickname}</p>
@@ -53,12 +52,12 @@
 	        <h3>댓글 작성</h3>
 	        <form action="/board/reply" method="post" class="reply-form">
 	            <input type="hidden" name="b_no" value="${read.b_no}">
-	            <div>
-	                <label for="r_content">내용:</label>
-	                <textarea name="r_content" id="r_content" required></textarea>
-	            </div>
+				<div style="display: flex; align-items: center; justify-content: center;">
+				    <label for="r_content">내용:</label>
+				    <textarea name="r_content" id="r_content" required style="width: 300px; height: 20px; resize: none;"></textarea>
+				</div>
 	            <input type="hidden" name="m_nickname" value="${pageContext.request.userPrincipal.name}">
-	            <button type="submit">댓글 작성</button>
+	            <button type="submit" style="margin-top: 10px;">댓글 작성</button>
 	        </form>
 	    </div>
 	</sec:authorize>
