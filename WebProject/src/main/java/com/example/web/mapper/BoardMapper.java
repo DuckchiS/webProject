@@ -19,4 +19,5 @@ public interface BoardMapper {
 	public void write(BoardDto dto);
 	public void modify(BoardDto dto);
 	public void hit(long no);
+	public void updateViewCount(long no);
 }

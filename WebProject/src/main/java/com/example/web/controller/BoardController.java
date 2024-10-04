@@ -28,6 +28,7 @@ import com.example.web.model.CustomUserDetails;
 import com.example.web.service.BoardService;
 import com.example.web.service.ReplyService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
@@ -87,25 +88,52 @@ public class BoardController {
     }
 	
 	@GetMapping({"/read", "/modify"})
-	public void read(@RequestParam("b_no") long b_no, @RequestParam(value = "category", required = false) String category, Model model, Principal principal) {
-	    BoardDto board = service.read(b_no); 
-	    List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no);
+	public void read(@RequestParam("b_no") long b_no, 
+	                 @RequestParam(value = "category", required = false) String category,
+	                 @RequestParam(value = "page", defaultValue = "1") int page, 
+	                 Model model, 
+	                 HttpSession session, 
+	                 Principal principal) {
+	    // 세션에서 조회 기록을 확인
+	    String sessionKey = "viewed_" + b_no;
 	    
-	    // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
+	    // 조회수 증가 로직: 세션에 해당 게시글 조회 기록이 없을 때만 조회수 증가
+	    if (session.getAttribute(sessionKey) == null) {
+	        // 조회수 증가
+	        service.read(b_no);  // 조회수를 증가시키면서 게시글을 가져옴
+	        // 조회한 기록을 세션에 저장
+	        session.setAttribute(sessionKey, true);
+	    } else {
+	        // 조회수를 증가시키지 않고 게시글을 가져옴
+	        BoardDto board = service.read(b_no);  // 조회수는 증가하지 않음
+	        model.addAttribute("read", board);
+	    }
+	    
+	    int repliesPerPage = 5; // 페이지당 댓글 수
+	    List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no, page, repliesPerPage);  // 페이징 처리된 댓글 목록 가져오기
+	    int totalReplyCount = replyService.getReplyCountByBoardId(b_no);  // 댓글의 총 개수
+	    int totalPages = (int) Math.ceil((double) totalReplyCount / repliesPerPage);  // 총 페이지 수 계산
+	    System.out.println("==========================");
+	    System.out.println(totalReplyCount);
+	    System.out.println(totalPages);
+	    System.out.println("==========================");
+	    
+	    // 로그인 사용자 정보 설정
 	    if (principal != null) {
 	        String username = principal.getName();
-	        // 사용자 정보를 SecurityContext에서 가져옴
 	        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	        String nickname = userDetails.getNickname();
 	        model.addAttribute("currentUsername", nickname);
 	    } else {
-	        model.addAttribute("currentUsername", "Guest"); // 로그인하지 않은 경우, 게스트 사용자로 처리
+	        model.addAttribute("currentUsername", "Guest"); // 로그인하지 않은 경우
 	    }
 	    
-	    model.addAttribute("read", board);
 	    model.addAttribute("replies", replies);
 	    model.addAttribute("category", category);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("currentPage", page);
 	}
+
 	
 	@PostMapping("/modify")
 	public String modifyProcess(BoardDto dto, @RequestParam(value = "category", required = false) String category) {

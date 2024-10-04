@@ -19,7 +19,14 @@ public class ReplyService {
 		replyMapper.insertReply(reply);
 	}
 	
-	public List<ReplyDto> getRepliesByBoardId(long b_no) {
-		return replyMapper.getReplys(b_no);
-	}
+    // 페이징 처리된 댓글 목록을 가져오는 메서드
+    public List<ReplyDto> getRepliesByBoardId(long b_no, int page, int repliesPerPage) {
+        int offset = (page - 1) * repliesPerPage;
+        return replyMapper.getReplys(b_no, offset, repliesPerPage);
+    }
+
+    // 게시물의 댓글 개수를 가져오는 메서드
+    public int getReplyCountByBoardId(long b_no) {
+        return replyMapper.getReplyCountByBoardId(b_no);
+    }
 }

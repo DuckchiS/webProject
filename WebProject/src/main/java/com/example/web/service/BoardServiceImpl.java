@@ -92,6 +92,7 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public BoardDto read(long no) {
+		mapper.hit(no);
 		return mapper.read(no);
 	}
 	

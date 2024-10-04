@@ -3,10 +3,18 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.web.mapper.ReplyMapper">
-	<insert id="insertReply">
-		insert into reply (r_content,m_nickname,b_no) value(#{r_content},#{m_nickname},#{b_no})
-	</insert>
-	<select id="getReplys" resultType="com.example.web.dto.ReplyDto">
-		select * from reply where b_no = #{b_no}
+    <insert id="insertReply">
+        insert into reply (r_content,m_nickname,b_no) value(#{r_content},#{m_nickname},#{b_no})
+    </insert>
+
+   <select id="getReplys" resultType="com.example.web.dto.ReplyDto">
+        select * from reply 
+        where b_no = #{b_no}
+        order by r_datetime desc
+        limit #{offset}, #{limit} <!-- 페이징 처리를 위한 offset, limit -->
+    </select>
+	<!-- 새로운 메서드 매핑 추가 -->
+	<select id="getReplyCountByBoardId" resultType="int" parameterType="long">
+		select count(*) from reply where b_no = #{b_no}
 	</select>
 </mapper>

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,18 +65,44 @@
 	    <!-- 로그인하지 않은 경우에는 댓글 작성 폼을 표시하지 않음 -->
 	    <p>댓글을 작성하려면 <a href="/member/login">로그인</a>해주세요.</p>
 	</sec:authorize>
-    <div class="reply-list-section">
-        <h3>댓글 목록</h3>
-        <div class="reply-list">
-            <c:forEach var="reply" items="${replies}">
-                <div class="reply-item">
-                    <p><span>작성자:</span> ${reply.m_nickname}</p>
-                    <p> ${reply.r_content}</p>
-                    <p><span>작성시간:</span> ${reply.r_datetime}</p>
-                </div>
-            </c:forEach>
-        </div>
-    </div>
+	<div class="reply-list-section">
+	    <h3>댓글 목록</h3>
+	    <div class="reply-list">
+	        <c:forEach var="reply" items="${replies}">
+	            <div class="reply-item">
+	                <p><span>작성자:</span> ${reply.m_nickname}</p>
+	                <p>${reply.r_content}</p>
+	                <p><span>작성시간:</span> ${reply.r_datetime}</p>
+	            </div>
+	        </c:forEach>
+	
+	        <c:if test="${empty replies}">
+	            <p>댓글이 없습니다.</p> <!-- 댓글이 없을 때 메시지 추가 -->
+	        </c:if>
+	    </div>
+	
+	    <!-- 페이징 버튼 -->
+		<div class="pagination">
+		    <c:if test="${currentPage > 1}">
+		        <a href="/board/read?b_no=${read.b_no}&page=${currentPage - 1}&category=${category}">이전</a>
+		    </c:if>
+		
+		    <c:forEach begin="1" end="${totalPages}" var="page">
+		        <c:choose>
+		            <c:when test="${page == currentPage}">
+		                <span>${page}</span> <!-- 현재 페이지 표시 -->
+		            </c:when>
+		            <c:otherwise>
+		                <a href="/board/read?b_no=${read.b_no}&page=${page}&category=${category}">${page}</a>
+		            </c:otherwise>
+		        </c:choose>
+		    </c:forEach>
+		
+		    <c:if test="${currentPage < totalPages}">
+		        <a href="/board/read?b_no=${read.b_no}&page=${currentPage + 1}&category=${category}">다음</a>
+		    </c:if>
+		</div>
+	</div>
 </div>
 <footer class="footer">
     &copy; 2024 DuckchiS. All rights reserved.

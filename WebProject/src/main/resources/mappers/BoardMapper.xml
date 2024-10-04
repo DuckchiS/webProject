@@ -54,4 +54,10 @@
 	<update id="like">
 		update board set b_like = b_like + 1 where b_no = #{b_no}
 	</update>
+	
+	<update id="updateViewCount">
+        UPDATE board
+        SET b_hit = b_hit + 1
+        WHERE b_no = #{b_no}
+    </update>
 </mapper>
