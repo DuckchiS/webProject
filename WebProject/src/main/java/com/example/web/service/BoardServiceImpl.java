@@ -91,11 +91,17 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public BoardDto read(long no) {
-		mapper.hit(no);
-		return mapper.read(no);
+	public BoardDto read(long no, boolean incrementViewCount) {
+	    if (incrementViewCount) {
+	        mapper.hit(no);  // 조회수 증가
+	    }
+	    return mapper.read(no);  // 게시글 조회
 	}
 	
+	// 댓글 조회 시 호출할 메서드 추가
+	public BoardDto readWithoutIncrement(long no) {
+	    return mapper.read(no);  // 게시글 조회 (조회수는 증가하지 않음)
+	}
 	
 	@Override
 	public void del(long no) {

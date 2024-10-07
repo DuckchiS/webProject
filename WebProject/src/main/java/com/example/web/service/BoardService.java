@@ -9,7 +9,7 @@ import com.example.web.dto.BoardDto;
 public interface BoardService {
 	public Model getList(Model m, int currentPage, String category);
 	public Model getSearchList(Model m, int currentPage, String word, String category);
-	public BoardDto read(long no);
+	public BoardDto read(long no, boolean incrementViewCount);
 	public void del(long no);
 	public void write(BoardDto dto);
 	public void modify(BoardDto dto);

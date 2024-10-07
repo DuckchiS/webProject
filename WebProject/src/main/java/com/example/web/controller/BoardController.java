@@ -91,49 +91,61 @@ public class BoardController {
 	public void read(@RequestParam("b_no") long b_no, 
 	                 @RequestParam(value = "category", required = false) String category,
 	                 @RequestParam(value = "page", defaultValue = "1") int page, 
+	                 @RequestParam(value = "replySubmitted", required = false) Boolean replySubmitted,
 	                 Model model, 
 	                 HttpSession session, 
 	                 Principal principal) {
-	    // 세션에서 조회 기록을 확인
+
+	    // 게시글 조회 기록 관리: 게시글 번호로 세션 키 설정
 	    String sessionKey = "viewed_" + b_no;
-	    
-	    // 조회수 증가 로직: 세션에 해당 게시글 조회 기록이 없을 때만 조회수 증가
-	    if (session.getAttribute(sessionKey) == null) {
+	    String pageKey = "page_" + b_no;
+
+	    // 현재 시간을 가져옴
+	    long currentTime = System.currentTimeMillis();
+	    long viewTimeout = 1 * 1000; // 1초 타임아웃
+
+	    // 세션에 저장된 게시글 조회 시간을 확인
+	    Long lastViewTime = (Long) session.getAttribute(sessionKey);
+
+	    // 게시글 조회
+	    BoardDto board;
+
+	    // 댓글 작성 후 조회하거나 댓글 페이지 이동 시 조회수를 증가시키지 않음
+	    boolean isReplyOrPagingAction = (replySubmitted != null && replySubmitted) || (session.getAttribute(pageKey) != null && (int) session.getAttribute(pageKey) != page);
+
+	    // 조회수를 증가시키는 조건: 조회 시간이 없거나, 마지막 조회 이후 일정 시간이 지난 경우 && 댓글 또는 페이징 동작이 아닌 경우
+	    if ((lastViewTime == null || (currentTime - lastViewTime) > viewTimeout) && !isReplyOrPagingAction) {
 	        // 조회수 증가
-	        service.read(b_no);  // 조회수를 증가시키면서 게시글을 가져옴
-	        // 조회한 기록을 세션에 저장
-	        session.setAttribute(sessionKey, true);
+	        board = service.read(b_no, true);
+	        session.setAttribute(sessionKey, currentTime);  // 현재 시간을 세션에 저장
 	    } else {
-	        // 조회수를 증가시키지 않고 게시글을 가져옴
-	        BoardDto board = service.read(b_no);  // 조회수는 증가하지 않음
-	        model.addAttribute("read", board);
+	        // 조회수 증가 없음
+	        board = service.read(b_no, false);
 	    }
-	    
-	    int repliesPerPage = 5; // 페이지당 댓글 수
-	    List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no, page, repliesPerPage);  // 페이징 처리된 댓글 목록 가져오기
-	    int totalReplyCount = replyService.getReplyCountByBoardId(b_no);  // 댓글의 총 개수
-	    int totalPages = (int) Math.ceil((double) totalReplyCount / repliesPerPage);  // 총 페이지 수 계산
-	    System.out.println("==========================");
-	    System.out.println(totalReplyCount);
-	    System.out.println(totalPages);
-	    System.out.println("==========================");
-	    
+
+	    // 댓글 페이지 이동 처리
+	    session.setAttribute(pageKey, page);  // 현재 댓글 페이지를 세션에 기록
+
+	    // 댓글 처리 부분
+	    int repliesPerPage = 5;  // 페이지당 댓글 수
+	    List<ReplyDto> replies = replyService.getRepliesByBoardId(b_no, page, repliesPerPage);
+	    int totalReplyCount = replyService.getReplyCountByBoardId(b_no);
+	    int totalPages = (int) Math.ceil((double) totalReplyCount / repliesPerPage);
+
 	    // 로그인 사용자 정보 설정
 	    if (principal != null) {
-	        String username = principal.getName();
 	        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	        String nickname = userDetails.getNickname();
-	        model.addAttribute("currentUsername", nickname);
+	        model.addAttribute("currentUsername", userDetails.getNickname());
 	    } else {
-	        model.addAttribute("currentUsername", "Guest"); // 로그인하지 않은 경우
+	        model.addAttribute("currentUsername", "Guest");
 	    }
-	    
-	    model.addAttribute("replies", replies);
-	    model.addAttribute("category", category);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("currentPage", page);
-	}
 
+	    model.addAttribute("read", board);          // 게시글 데이터
+	    model.addAttribute("replies", replies);     // 댓글 목록
+	    model.addAttribute("category", category);   // 카테고리
+	    model.addAttribute("totalPages", totalPages);  // 총 페이지 수
+	    model.addAttribute("currentPage", page);    // 현재 페이지
+	}
 	
 	@PostMapping("/modify")
 	public String modifyProcess(BoardDto dto, @RequestParam(value = "category", required = false) String category) {
@@ -144,6 +156,7 @@ public class BoardController {
 	        return "redirect:/board/list";
 	    }
 	}
+	
 	@GetMapping("/del")
 	public String del(@RequestParam("b_no") long bno, @RequestParam(value = "category", required = false) String category) {
 	    service.del(bno);
@@ -155,24 +168,27 @@ public class BoardController {
 	}
 	
 	@PostMapping("/reply")
-	public RedirectView replyProcess(@RequestParam("r_content") String content, @RequestParam("b_no") int boardId, Principal principal) {
+	public RedirectView replyProcess(@RequestParam("r_content") String content, 
+	                                 @RequestParam("b_no") int boardId, 
+	                                 Principal principal) {
 	    // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
-        String username = principal.getName();
-        
-        // 사용자 정보를 SecurityContext에서 가져옴
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String nickname = userDetails.getNickname();
+	    String username = principal.getName();
+	    
+	    // 사용자 정보를 SecurityContext에서 가져옴
+	    CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    String nickname = userDetails.getNickname();
 
-        // 댓글 DTO에 값 설정
-        ReplyDto replyDto = new ReplyDto();
-        replyDto.setR_content(content);
-        replyDto.setM_nickname(nickname);
-        replyDto.setB_no(boardId);
-        
-        replyService.createReply(replyDto);
+	    // 댓글 DTO에 값 설정
+	    ReplyDto replyDto = new ReplyDto();
+	    replyDto.setR_content(content);
+	    replyDto.setM_nickname(nickname);
+	    replyDto.setB_no(boardId);
+	    
+	    // 댓글 생성 서비스 호출
+	    replyService.createReply(replyDto);
 
-        // 게시글 상세 페이지로 리다이렉트
-        return new RedirectView("/board/read?b_no=" + boardId);
+	    // 게시글 상세 페이지로 리다이렉트할 때 replySubmitted 파라미터 추가
+	    return new RedirectView("/board/read?b_no=" + boardId + "&replySubmitted=true");
 	}
 	
 	@GetMapping("/latter")

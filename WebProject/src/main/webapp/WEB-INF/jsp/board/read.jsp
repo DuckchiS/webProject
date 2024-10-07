@@ -52,10 +52,11 @@
 	        <h3>댓글 작성</h3>
 	        <form action="/board/reply" method="post" class="reply-form">
 	            <input type="hidden" name="b_no" value="${read.b_no}">
-				<div style="display: flex; align-items: center; justify-content: center;">
-				    <label for="r_content">내용:</label>
-				    <textarea name="r_content" id="r_content" required style="width: 300px; height: 20px; resize: none;"></textarea>
-				</div>
+	            <input type="hidden" name="replySubmitted" value="true"> <!-- 댓글 작성 여부 플래그 추가 -->
+	            <div style="display: flex; align-items: center; justify-content: center;">
+	                <label for="r_content">내용:</label>
+	                <textarea name="r_content" id="r_content" required style="width: 300px; height: 20px; resize: none;"></textarea>
+	            </div>
 	            <input type="hidden" name="m_nickname" value="${pageContext.request.userPrincipal.name}">
 	            <button type="submit" style="margin-top: 10px;">댓글 작성</button>
 	        </form>
