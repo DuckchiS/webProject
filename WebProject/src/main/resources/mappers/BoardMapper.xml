@@ -36,7 +36,7 @@
 	</delete>
 	
 	<insert id="write">
-		insert into board (b_title,b_content,m_nickname,b_category) values (#{b_title},#{b_content},#{m_nickname},#{b_category}) 
+		insert into board (b_title,b_content,m_nickname,b_category,b_image) values (#{b_title},#{b_content},#{m_nickname},#{b_category},#{b_image}) 
 	</insert>
 	
 	<insert id="reply">
@@ -44,7 +44,8 @@
 	</insert>
 	
 	<update id="modify">
-		update board set b_content = #{b_content}, b_updatetime = now(), b_category = #{b_category} where b_no = #{b_no}
+		update board set b_content = #{b_content}, b_updatetime = now(), b_category = #{b_category} ,
+        b_image = CASE WHEN #{b_image} IS NOT NULL THEN #{b_image} ELSE b_image END where b_no = #{b_no}
 	</update>
 	
 	<update id="hit">

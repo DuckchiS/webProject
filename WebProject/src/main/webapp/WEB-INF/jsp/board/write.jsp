@@ -20,7 +20,7 @@
 <div class="container">
     <div class="form-container">
         <h2>게시글 쓰기</h2>
-        <form action="/board/write" method="post">
+        <form action="/board/write" method="post" enctype="multipart/form-data"> <!-- enctype 추가 -->
         	<!-- 숨겨진 필드로 카테고리 설정 -->
             <input type="hidden" name="b_category" value="${param.category}">
             
@@ -29,8 +29,11 @@
 	
 	        <label for="b_content">내용:</label>
 	        <textarea id="b_content" name="b_content" rows="3" required style="width: 100%; height: 150px; resize: none;"></textarea><br>
-
-            <input type="submit" value="글쓰기">
+	        
+	        <label for="b_image">이미지 업로드:</label> <!-- 이미지 업로드 필드 추가 -->
+	        <input type="file" id="b_image" name="b_image" accept="image/*"><br> <!-- 이미지 파일만 선택 가능 -->
+	
+	        <input type="submit" value="글쓰기">
         </form>
     </div>
 </div>

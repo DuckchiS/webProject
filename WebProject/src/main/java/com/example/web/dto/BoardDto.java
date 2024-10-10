@@ -1,6 +1,7 @@
 package com.example.web.dto;
 
 import java.sql.Date;
+import java.util.Base64;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +19,11 @@ public class BoardDto {
 	private String m_nickname;
 	private String b_category;
 	private long r_no;
+	private byte[] b_image; // 이미지 필드 추가
+    public String getB_imageAsBase64() {
+        if (b_image != null) {
+            return Base64.getEncoder().encodeToString(b_image);
+        }
+        return null;
+    }
 }

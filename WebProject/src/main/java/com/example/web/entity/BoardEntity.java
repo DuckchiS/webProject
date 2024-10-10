@@ -50,4 +50,7 @@ public class BoardEntity {
 
     @OneToMany(mappedBy = "board")
     private List<ReplyEntity> replies;
+    
+    @Column(name = "B_image", nullable = true)
+    private byte[] bImage; // 이미지 필드 추가
 }

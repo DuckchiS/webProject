@@ -38,6 +38,10 @@
 		</div>
         <div class="board-content">
             <p>${read.b_content}</p>
+            <!-- 업로드된 이미지 표시 -->
+			<c:if test="${not empty read.getB_imageAsBase64()}">
+			    <img src="data:image/jpeg;base64,${read.getB_imageAsBase64()}" alt="게시글 이미지" style="max-width: 100%; height: auto;" />
+			</c:if>
         </div>
         <div class="board-actions">
             <c:if test="${read.m_nickname == currentUsername}">

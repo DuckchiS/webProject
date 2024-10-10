@@ -1,5 +1,6 @@
 package com.example.web.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -64,29 +66,45 @@ public class BoardController {
 		return "board/write";
 	}
 	
-	@PostMapping(value = "/write", consumes = "application/x-www-form-urlencoded")
-    public RedirectView write(@RequestParam("b_title") String title, @RequestParam("b_content") String content, @RequestParam("b_category") String category, Principal principal) {
-        // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
-        String username = principal.getName();
-        
-        // 사용자 정보를 SecurityContext에서 가져옴
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String nickname = userDetails.getNickname();
+	@PostMapping(value = "/write", consumes = "multipart/form-data")
+	public RedirectView write(@RequestParam("b_title") String title,
+	                           @RequestParam("b_content") String content,
+	                           @RequestParam("b_category") String category,
+	                           @RequestParam(value = "b_image", required = false) MultipartFile file,
+	                           Principal principal) {
+	    // Principal 객체를 통해 현재 로그인한 사용자의 정보를 가져옴
+	    String username = principal.getName();
 
-        // DTO에 값 설정
-        BoardDto dto = new BoardDto();
-        dto.setB_title(title);
-        dto.setB_content(content);
-        dto.setM_nickname(nickname);
-        dto.setB_category(category);
+	    // 사용자 정보를 SecurityContext에서 가져옴
+	    CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    String nickname = userDetails.getNickname();
 
-        // 게시글 작성 서비스 호출
-        service.write(dto);
+	    // DTO에 값 설정
+	    BoardDto dto = new BoardDto();
+	    dto.setB_title(title);
+	    dto.setB_content(content);
+	    dto.setM_nickname(nickname);
+	    dto.setB_category(category);
 
-        // 리스트로 리다이렉트
-        return new RedirectView("/board/list?category="+category);
-    }
-	
+	    // 이미지 파일 처리
+	    if (file != null && !file.isEmpty()) {
+	        try {
+	            dto.setB_image(file.getBytes());  // 파일이 있을 경우 바이트 배열로 변환하여 설정
+	        } catch (IOException e) {
+	            log.error("이미지 파일 변환 중 오류 발생: " + e.getMessage());
+	            // 여기서 필요에 따라 예외 처리 추가 가능
+	        }
+	    } else {
+	        dto.setB_image(null); // 이미지가 제공되지 않을 경우 null 설정
+	    }
+
+	    // 게시글 작성 서비스 호출
+	    service.write(dto);
+
+	    // 리스트로 리다이렉트
+	    return new RedirectView("/board/list?category=" + category);
+	}
+
 	@GetMapping({"/read", "/modify"})
 	public void read(@RequestParam("b_no") long b_no, 
 	                 @RequestParam(value = "category", required = false) String category,
@@ -148,13 +166,43 @@ public class BoardController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyProcess(BoardDto dto, @RequestParam(value = "category", required = false) String category) {
-	    service.modify(dto);
-	    if (category != null) {
-	        return "redirect:/board/list?category=" + category;
-	    } else {
-	        return "redirect:/board/list";
+	public String modifyProcess(
+	        BoardDto dto, 
+	        @RequestParam(value = "b_image", required = false) MultipartFile file,
+	        @RequestParam(value = "category", required = false) String category,
+	        RedirectAttributes redirectAttributes) { // RedirectAttributes 추가
+
+	    // 게시글 번호와 내용을 필수로 체크
+	    if (dto.getB_no() <= 0) {
+	        redirectAttributes.addFlashAttribute("error", "게시글 번호가 유효하지 않습니다.");
+	        return "redirect:/board/modify?category=" + category;
 	    }
+	    
+	    if (dto.getB_content() == null || dto.getB_content().trim().isEmpty()) {
+	        redirectAttributes.addFlashAttribute("error", "게시글 내용이 비어 있습니다.");
+	        return "redirect:/board/modify?category=" + category;
+	    }
+
+	    if (file != null && !file.isEmpty()) {
+	        log.info("File received: " + file.getOriginalFilename());
+	        try {
+	            dto.setB_image(file.getBytes());
+	            log.info("File converted to bytes successfully.");
+	        } catch (IOException e) {
+	            log.error("Error converting file to bytes: " + e.getMessage());
+	            redirectAttributes.addFlashAttribute("error", "이미지 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.");
+	            return "redirect:/board/modify?category=" + category;
+	        }
+	    } else {
+	        log.warn("No file was uploaded.");
+	        dto.setB_image(null); // 파일이 없는 경우 null 설정
+	    }
+
+	    // 게시글 수정 서비스 호출
+	    service.modify(dto);
+
+	    // 수정 후 리다이렉트
+	    return category != null ? "redirect:/board/list?category=" + category : "redirect:/board/list";
 	}
 	
 	@GetMapping("/del")

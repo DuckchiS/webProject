@@ -109,14 +109,22 @@ public class BoardServiceImpl implements BoardService{
 		mapper.del(no);
 	}
 	
-	@Transactional
-	@Override
-	public void write(BoardDto dto) {
-		mapper.write(dto);
-	}
-	
-	@Override
-	public void modify(BoardDto dto) {
-		mapper.modify(dto);
-	}
+    @Transactional
+    @Override
+    public void write(BoardDto dto) {
+        // 이미지가 없을 경우 null로 설정
+        if (dto.getB_image() == null) {
+            dto.setB_image(null);
+        }
+        mapper.write(dto);
+    }
+
+    @Override
+    public void modify(BoardDto dto) {
+        // 이미지가 없을 경우 null로 설정
+        if (dto.getB_image() == null) {
+            dto.setB_image(null);
+        }
+        mapper.modify(dto);
+    }
 }
