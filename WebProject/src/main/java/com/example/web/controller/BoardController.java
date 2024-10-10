@@ -167,21 +167,22 @@ public class BoardController {
 	
 	@PostMapping("/modify")
 	public String modifyProcess(
-	        BoardDto dto, 
+	        @RequestParam("b_no") long b_no,
 	        @RequestParam(value = "b_image", required = false) MultipartFile file,
 	        @RequestParam(value = "category", required = false) String category,
-	        RedirectAttributes redirectAttributes) { // RedirectAttributes 추가
+	        @RequestParam("b_content") String b_content,
+	        RedirectAttributes redirectAttributes) {
 
-	    // 게시글 번호와 내용을 필수로 체크
-	    if (dto.getB_no() <= 0) {
-	        redirectAttributes.addFlashAttribute("error", "게시글 번호가 유효하지 않습니다.");
-	        return "redirect:/board/modify?category=" + category;
+	    // b_content가 비어 있는지 체크
+	    if (b_content == null || b_content.trim().isEmpty()) {
+	        redirectAttributes.addFlashAttribute("error", "내용은 비어 있을 수 없습니다.");
+	        return "redirect:/board/modify?category=" + category + "&b_no=" + b_no;
 	    }
-	    
-	    if (dto.getB_content() == null || dto.getB_content().trim().isEmpty()) {
-	        redirectAttributes.addFlashAttribute("error", "게시글 내용이 비어 있습니다.");
-	        return "redirect:/board/modify?category=" + category;
-	    }
+
+	    BoardDto dto = new BoardDto(); // 새로운 BoardDto 인스턴스 생성
+	    dto.setB_no(b_no);
+	    dto.setB_content(b_content);
+	    dto.setB_category(category); // 카테고리 설정 추가
 
 	    if (file != null && !file.isEmpty()) {
 	        log.info("File received: " + file.getOriginalFilename());
@@ -190,12 +191,12 @@ public class BoardController {
 	            log.info("File converted to bytes successfully.");
 	        } catch (IOException e) {
 	            log.error("Error converting file to bytes: " + e.getMessage());
-	            redirectAttributes.addFlashAttribute("error", "이미지 업로드 중 오류가 발생했습니다. 다시 시도해 주세요.");
-	            return "redirect:/board/modify?category=" + category;
+	            redirectAttributes.addFlashAttribute("error", "이미지 업로드 중 오류가 발생했습니다.");
+	            return "redirect:/board/modify?category=" + category + "&b_no=" + b_no;
 	        }
 	    } else {
 	        log.warn("No file was uploaded.");
-	        dto.setB_image(null); // 파일이 없는 경우 null 설정
+	        dto.setB_image(null);
 	    }
 
 	    // 게시글 수정 서비스 호출

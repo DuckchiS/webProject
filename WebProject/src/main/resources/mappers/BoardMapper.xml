@@ -44,8 +44,12 @@
 	</insert>
 	
 	<update id="modify">
-		update board set b_content = #{b_content}, b_updatetime = now(), b_category = #{b_category} ,
-        b_image = CASE WHEN #{b_image} IS NOT NULL THEN #{b_image} ELSE b_image END where b_no = #{b_no}
+	  UPDATE board
+	    SET b_content = #{b_content},
+	        b_updatetime = NOW(),
+	        b_category = #{b_category},
+	        b_image = CASE WHEN #{b_image} IS NOT NULL THEN #{b_image} ELSE b_image END
+	    WHERE b_no = #{b_no}
 	</update>
 	
 	<update id="hit">
